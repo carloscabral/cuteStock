@@ -1,5 +1,7 @@
 angular.module('cuteStock', [
   'ionic',
+  'nvd3',
+  'nvChart',
   'cuteStock.controllers',
   'cuteStock.services',
   'cuteStock.filters',
