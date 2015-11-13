@@ -154,7 +154,7 @@ angular.module('cuteStock.controllers', [])
         chartType: 'linePlusBarWithFocusChart',
         data: 'myData',
         //height: 500,
-        margin: {top: 15, right: 40, bottom: marginBottom, left: 70},
+        margin: {top: 15, right: 0, bottom: marginBottom, left: 0},
         interpolate: "cardinal",
         useInteractiveGuideline: false,
         yShowMaxMin: false,
@@ -169,7 +169,10 @@ angular.module('cuteStock.controllers', [])
         y2AxisTickFormat: y2TickFormat,
         y3AxisTickFormat: y3TickFormat,
         y4AxisTickFormat: y4TickFormat,
-        transitionDuration: 500
+        transitionDuration: 500,
+        y1AxisLabel: 'Price',
+        y3AxisLabel: 'Volume',
+        noData: 'Loading data...'
       };
 
 }]);
