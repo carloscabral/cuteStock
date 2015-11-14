@@ -1,5 +1,6 @@
 angular.module('cuteStock', [
   'ionic',
+  'angular-cache',
   'nvd3',
   'nvChart',
   'cuteStock.controllers',
