@@ -70,9 +70,6 @@ angular.module('cuteStock.controllers', [])
     $scope.oneYearAgoDate = dateService.oneYearAgoDate();
     $scope.todayDate = dateService.currentDate();
 
-    console.log(dateService.currentDate());
-    console.log(dateService.oneYearAgoDate());
-
     $scope.$on("$ionicView.afterEnter", function() {
       getPriceData();
       getDetailsData();
@@ -87,8 +84,15 @@ angular.module('cuteStock.controllers', [])
       var promise = stockDataService.getPriceData($scope.ticker);
 
       promise.then(function(data) {
-        console.log(data);
         $scope.stockPriceData = data;
+
+        if(data.chg_percent >= 0 && data !== null) {
+          $scope.reactiveColor = {'background-color': '#33cd5f'};
+        }
+        else if(data.chg_percent < 0 && data !== null) {
+          $scope.reactiveColor = {'background-color' : '#ef473a'};
+        }
+
       });
     }
 
