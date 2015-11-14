@@ -3,6 +3,7 @@ angular.module('cuteStock', [
   'angular-cache',
   'nvd3',
   'nvChart',
+  'cb.x2js',
   'cuteStock.controllers',
   'cuteStock.services',
   'cuteStock.filters',

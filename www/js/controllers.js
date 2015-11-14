@@ -62,8 +62,8 @@ angular.module('cuteStock.controllers', [])
 
 }])
 
-.controller('StockCtrl', ['$scope', '$stateParams', '$window', '$ionicPopup', 'stockDataService', 'dateService', 'chartDataService', 'notesService',
-  function($scope, $stateParams, $window, $ionicPopup, stockDataService, dateService, chartDataService, notesService) {
+.controller('StockCtrl', ['$scope', '$stateParams', '$window', '$ionicPopup', 'stockDataService', 'dateService', 'chartDataService', 'notesService', 'newsService',
+  function($scope, $stateParams, $window, $ionicPopup, stockDataService, dateService, chartDataService, notesService, newsService) {
 
     $scope.ticker = $stateParams.stockTicker;
     $scope.chartView = 4;
@@ -74,8 +74,15 @@ angular.module('cuteStock.controllers', [])
       getPriceData();
       getDetailsData();
       getChartData();
+      getNews();
       $scope.stockNotes = notesService.getNotes($scope.ticker);
     });
+
+
+    $scope.openWindow = function (link) {
+      /* TODO install inAppBrowser */
+      console.log("openWindow -> " + link);
+    };
 
     $scope.chartViewFunc = function (n) {
       $scope.chartView = n;
@@ -148,6 +155,18 @@ angular.module('cuteStock.controllers', [])
         $scope.stockNotes = notesService.getNotes($scope.ticker);
       });
     };
+
+
+    function getNews() {
+
+      $scope.newsStories = [];
+
+      var promise = newsService.getNews($scope.ticker);
+
+      promise.then(function (data) {
+        $scope.newsStories = data;
+      });
+    }
 
 
     function getPriceData() {
