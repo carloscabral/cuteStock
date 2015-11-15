@@ -42,23 +42,11 @@ angular.module('cuteStock.controllers', [])
 
 })
 
-.controller('MyStocksCtrl', ['$scope',
-  function($scope) {
+.controller('MyStocksCtrl', ['$scope', 'myStocksArrayService',
+  function($scope, myStocksArrayService) {
 
-    $scope.myStocksArray = [
-      {ticker: "AAPL"},
-      {ticker: "GPRO"},
-      {ticker: "FB"},
-      {ticker: "NFLX"},
-      {ticker: "TSLA"},
-      {ticker: "BRK-A"},
-      {ticker: "INTC"},
-      {ticker: "MSFT"},
-      {ticker: "GE"},
-      {ticker: "BAC"},
-      {ticker: "C"},
-      {ticker: "T"}
-    ];
+    $scope.myStocksArray = myStocksArrayService;
+    console.log(myStocksArrayService);
 
 }])
 
