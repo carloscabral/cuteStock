@@ -1,52 +1,43 @@
 angular.module('cuteStock.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
+.controller('AppCtrl', ['$scope', 'modalService',
+  function($scope, modalService) {
 
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
+    $scope.modalService = modalService;
 
-  // Form data for the login modal
-  $scope.loginData = {};
+}])
 
-  // Create the login modal that we will use later
-  $ionicModal.fromTemplateUrl('templates/login.html', {
-    scope: $scope
-  }).then(function(modal) {
-    $scope.modal = modal;
-  });
+.controller('MyStocksCtrl', ['$scope', 'myStocksArrayService', 'stockDataService', 'stockPriceCacheService',
+  function($scope, myStocksArrayService, stockDataService, stockPriceCacheService) {
 
-  // Triggered in the login modal to close it
-  $scope.closeLogin = function() {
-    $scope.modal.hide();
-  };
+    $scope.$on("$ionicView.afterEnter", function() {
+      $scope.getMyStocksData();
+    });
 
-  // Open the login modal
-  $scope.login = function() {
-    $scope.modal.show();
-  };
+    $scope.getMyStocksData = function () {
 
-  // Perform the login action when the user submits the login form
-  $scope.doLogin = function() {
-    console.log('Doing login', $scope.loginData);
+      myStocksArrayService.forEach(function (stock) {
 
-    // Simulate a login delay. Remove this and replace with your login
-    // code if using a login system
-    $timeout(function() {
-      $scope.closeLogin();
-    }, 1000);
-  };
+        var promise = stockDataService.getPriceData(stock.ticker);
 
-})
+        $scope.myStocksData = [];
 
-.controller('MyStocksCtrl', ['$scope', 'myStocksArrayService',
-  function($scope, myStocksArrayService) {
+        promise.then(function (data) {
+          $scope.myStocksData.push(stockPriceCacheService.get(data.symbol));
+        });
+
+        $scope.$broadcast('scroll.refreshComplete');
+
+      });
+
+      $scope.unfollowStock = function(ticker) {
+        followStockService.unfollow(ticker);
+        $scope.getMyStocksData();
+      };
+
+    };
 
     $scope.myStocksArray = myStocksArrayService;
-    console.log(myStocksArrayService);
 
 }])
 
@@ -267,4 +258,33 @@ angular.module('cuteStock.controllers', [])
         noData: 'Loading data...'
       };
 
-}]);
+}])
+
+
+.controller('SearchCtrl', ['$scope', '$state', 'modalService', 'searchService',
+  function($scope, $state, modalService, searchService) {
+
+    $scope.closeModal = function() {
+      modalService.closeModal();
+    };
+
+    $scope.search = function() {
+      $scope.searchResults = '';
+      startSearch($scope.searchQuery);
+    };
+
+    var startSearch = ionic.debounce(function(query) {
+      searchService.search(query)
+        .then(function(data) {
+          $scope.searchResults = data;
+        });
+    }, 400);
+
+    $scope.goToStock = function(ticker) {
+      modalService.closeModal();
+      $state.go('app.stock', {stockTicker: ticker});
+    };
+}])
+
+
+;
