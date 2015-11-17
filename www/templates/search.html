@@ -36,7 +36,7 @@
 
     <ion-list>
       <ion-item class="item-dark border-none" ng-repeat="result in searchResults" ng-click="goToStock(result.symbol)">
-        <h3 class="light">{{result.symbol}} <span class="font-normal"> — {{result.name}}</span></h3>
+        <h3 class="light">{{result.symbol}} — <span ng-bind-html="result.name" class="font-normal"> </span></h3>
         <h6 class="light">{{result.exchDisp}}</h6>
       </ion-item>
     </ion-list>

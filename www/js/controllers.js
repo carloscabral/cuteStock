@@ -1,9 +1,13 @@
 angular.module('cuteStock.controllers', [])
 
-.controller('AppCtrl', ['$scope', 'modalService',
-  function($scope, modalService) {
+.controller('AppCtrl', ['$scope', 'modalService', 'userService',
+  function($scope, modalService, userService) {
 
     $scope.modalService = modalService;
+
+    $scope.logout = function () {
+      userService.logout();
+    };
 
 }])
 
@@ -259,6 +263,27 @@ angular.module('cuteStock.controllers', [])
       };
 
 }])
+
+
+.controller('LoginSignUpCtrl', ['$scope', 'modalService', 'userService',
+  function($scope, modalService, userService) {
+
+    $scope.closeModal = function() {
+      modalService.closeModal();
+    };
+
+    $scope.user = { email: '', password: ''};
+
+    $scope.signup = function (user) {
+      userService.signup(user);
+    };
+
+    $scope.login = function (user) {
+      userService.login(user);
+    };
+
+}])
+
 
 
 .controller('SearchCtrl', ['$scope', '$state', 'modalService', 'searchService',

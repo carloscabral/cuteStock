@@ -1,4 +1,9 @@
-angular.module('cuteStock.services', [])
+angular.module('cuteStock.services',
+	[
+		'cuteStock.constants'
+	])
+
+// You need to store the FIREBASE_URL Constant with the name of your firebase app in another module.
 
 .factory('encodeURIService', function () {
 
@@ -10,7 +15,6 @@ angular.module('cuteStock.services', [])
 	};
 
 })
-
 
 
 .factory('searchService', function ($q, $http) {
@@ -65,18 +69,24 @@ angular.module('cuteStock.services', [])
 
 		} else if (id === 2) {
 
+			console.log("I'm open!!!");
+
 			$ionicModal.fromTemplateUrl('templates/login.html', {
-				scope: $scope
+				scope: null,
+				controller: 'LoginSignUpCtrl'
 			}).then(function(modal) {
-				$scope.modal = modal;
+				_this.modal = modal;
+				_this.modal.show();
 			});
 
 		} else if (id === 3) {
 
-			$ionicModal.fromTemplateUrl('templates/login.html', {
-				scope: $scope
+			$ionicModal.fromTemplateUrl('templates/signup.html', {
+				scope: null,
+				controller: 'LoginSignUpCtrl'
 			}).then(function(modal) {
-				$scope.modal = modal;
+				_this.modal = modal;
+				_this.modal.show();
 			});
 
 		}
@@ -117,6 +127,74 @@ angular.module('cuteStock.services', [])
 	};
 
 })
+
+
+
+.factory('firebaseRef', function($firebase, FIREBASE_URL) {
+
+	var firebaseRef = new Firebase (FIREBASE_URL);
+
+	return firebaseRef;
+
+})
+
+
+.factory('userService', function($rootScope, firebaseRef, modalService) {
+
+  var login = function(user) {
+
+    firebaseRef.authWithPassword({
+      email    : user.email,
+      password : user.password
+    }, function(error, authData) {
+      if (error) {
+        console.log("Login Failed!", error);
+      }
+      else {
+        $rootScope.currentUser = user;
+        modalService.closeModal();
+      }
+    });
+  };
+
+  var signup = function(user) {
+
+		console.log(user.email + " " + user.password);
+
+    firebaseRef.createUser({
+      email    : user.email,
+      password : user.password
+    }, function(error, userData) {
+      if (error) {
+        console.log("Error creating user:", error);
+      }
+      else {
+        login(user);
+        console.log("Successfully created user:", userData.uid);
+      }
+    });
+  };
+
+  var logout = function() {
+    firebaseRef.unauth();
+    $rootScope.currentUser = '';
+  };
+
+  var getUser = function() {
+    return firebaseRef.getAuth();
+  };
+
+  if(getUser()) {
+    $rootScope.currentUser = getUser();
+  }
+
+  return {
+    login: login,
+    signup: signup,
+    logout: logout
+  };
+})
+
 
 
 .factory('chartDataCacheService', function (CacheFactory) {
