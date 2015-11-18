@@ -222,7 +222,7 @@
 }
 
 .color-red {
-	color: #ef473a;
+	color: #ef473a !important;
 }
 
 .background-red {

@@ -11,8 +11,8 @@ angular.module('cuteStock.controllers', [])
 
 }])
 
-.controller('MyStocksCtrl', ['$scope', 'myStocksArrayService', 'stockDataService', 'stockPriceCacheService',
-  function($scope, myStocksArrayService, stockDataService, stockPriceCacheService) {
+.controller('MyStocksCtrl', ['$scope', 'myStocksArrayService', 'stockDataService', 'stockPriceCacheService', 'followStockService',
+  function($scope, myStocksArrayService, stockDataService, stockPriceCacheService, followStockService) {
 
     $scope.$on("$ionicView.afterEnter", function() {
       $scope.getMyStocksData();
@@ -45,8 +45,8 @@ angular.module('cuteStock.controllers', [])
 
 }])
 
-.controller('StockCtrl', ['$scope', '$stateParams', '$window', '$ionicPopup', 'followStockService', 'stockDataService', 'dateService', 'chartDataService', 'notesService', 'newsService',
-  function($scope, $stateParams, $window, $ionicPopup, followStockService, stockDataService, dateService, chartDataService, notesService, newsService) {
+.controller('StockCtrl', ['$scope', '$stateParams', '$window', '$ionicPopup', '$cordovaInAppBrowser', 'followStockService', 'stockDataService', 'dateService', 'chartDataService', 'notesService', 'newsService',
+  function($scope, $stateParams, $window, $ionicPopup, $cordovaInAppBrowser, followStockService, stockDataService, dateService, chartDataService, notesService, newsService) {
 
     $scope.ticker = $stateParams.stockTicker;
     $scope.chartView = 4;
@@ -74,8 +74,13 @@ angular.module('cuteStock.controllers', [])
 
 
     $scope.openWindow = function (link) {
-      /* TODO install inAppBrowser */
-      console.log("openWindow -> " + link);
+      var inAppBrowserOptions = {
+        location : 'yes',
+        clearcache : 'yes',
+        tollbar : 'yes'
+      };
+
+      $cordovaInAppBrowser.open(link, '_blank', inAppBrowserOptions);
     };
 
     $scope.chartViewFunc = function (n) {

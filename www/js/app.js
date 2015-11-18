@@ -1,5 +1,6 @@
 angular.module('cuteStock', [
   'ionic',
+  'ngCordova',
   'firebase',
   'angular-cache',
   'nvd3',
